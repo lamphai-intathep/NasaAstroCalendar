@@ -7,25 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		953FF8E324EF721800B33CA7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 953FF8E124EF721800B33CA7 /* Main.storyboard */; };
+		953FF8E924EFA7F800B33CA7 /* ImageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953FF8E824EFA7F800B33CA7 /* ImageDetailViewController.swift */; };
+		953FF8EB24EFA87800B33CA7 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953FF8EA24EFA87800B33CA7 /* ImageViewController.swift */; };
 		9576955D24EDEC460005107F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9576955C24EDEC460005107F /* AppDelegate.swift */; };
 		9576955F24EDEC460005107F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9576955E24EDEC460005107F /* SceneDelegate.swift */; };
 		9576956124EDEC460005107F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9576956024EDEC460005107F /* MasterViewController.swift */; };
-		9576956324EDEC460005107F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9576956224EDEC460005107F /* DetailViewController.swift */; };
-		9576956624EDEC460005107F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9576956424EDEC460005107F /* Main.storyboard */; };
 		9576956824EDEC480005107F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9576956724EDEC480005107F /* Assets.xcassets */; };
 		9576956B24EDEC480005107F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9576956924EDEC480005107F /* LaunchScreen.storyboard */; };
+		9576957324EDF21E0005107F /* PhotoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9576957224EDF21E0005107F /* PhotoInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		953FF8E224EF721800B33CA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		953FF8E824EFA7F800B33CA7 /* ImageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailViewController.swift; sourceTree = "<group>"; };
+		953FF8EA24EFA87800B33CA7 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageViewController.swift; path = ../ImageViewController.swift; sourceTree = "<group>"; };
 		9576955924EDEC460005107F /* NasaAstroCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NasaAstroCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9576955C24EDEC460005107F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9576955E24EDEC460005107F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		9576956024EDEC460005107F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		9576956224EDEC460005107F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		9576956524EDEC460005107F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9576956724EDEC480005107F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9576956A24EDEC480005107F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9576956C24EDEC480005107F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9576957224EDF21E0005107F /* PhotoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,11 +65,13 @@
 				9576955C24EDEC460005107F /* AppDelegate.swift */,
 				9576955E24EDEC460005107F /* SceneDelegate.swift */,
 				9576956024EDEC460005107F /* MasterViewController.swift */,
-				9576956224EDEC460005107F /* DetailViewController.swift */,
-				9576956424EDEC460005107F /* Main.storyboard */,
+				953FF8EA24EFA87800B33CA7 /* ImageViewController.swift */,
+				953FF8E824EFA7F800B33CA7 /* ImageDetailViewController.swift */,
 				9576956724EDEC480005107F /* Assets.xcassets */,
+				953FF8E124EF721800B33CA7 /* Main.storyboard */,
 				9576956924EDEC480005107F /* LaunchScreen.storyboard */,
 				9576956C24EDEC480005107F /* Info.plist */,
+				9576957224EDF21E0005107F /* PhotoInfo.swift */,
 			);
 			path = NasaAstroCalendar;
 			sourceTree = "<group>";
@@ -128,9 +134,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				953FF8E324EF721800B33CA7 /* Main.storyboard in Resources */,
 				9576956B24EDEC480005107F /* LaunchScreen.storyboard in Resources */,
 				9576956824EDEC480005107F /* Assets.xcassets in Resources */,
-				9576956624EDEC460005107F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,17 +150,19 @@
 				9576955D24EDEC460005107F /* AppDelegate.swift in Sources */,
 				9576955F24EDEC460005107F /* SceneDelegate.swift in Sources */,
 				9576956124EDEC460005107F /* MasterViewController.swift in Sources */,
-				9576956324EDEC460005107F /* DetailViewController.swift in Sources */,
+				9576957324EDF21E0005107F /* PhotoInfo.swift in Sources */,
+				953FF8EB24EFA87800B33CA7 /* ImageViewController.swift in Sources */,
+				953FF8E924EFA7F800B33CA7 /* ImageDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		9576956424EDEC460005107F /* Main.storyboard */ = {
+		953FF8E124EF721800B33CA7 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				9576956524EDEC460005107F /* Base */,
+				953FF8E224EF721800B33CA7 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
