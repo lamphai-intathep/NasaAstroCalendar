@@ -17,7 +17,6 @@ class ImageDetailViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureScrollView()
-        //print("hdurl: \(String(describing: hdurl))")
         
         if let _ = hdurl, let _ = url {
             displayImage()
@@ -26,39 +25,62 @@ class ImageDetailViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func displayHdImage() {
-        URLSession.shared.dataTask(with: hdurl) { (data, response, error) in
+        DispatchQueue.global().async {
+            let network = NetworkController()
+            let image = network.displayImage(url: self.hdurl)
+            
             DispatchQueue.main.async {
-                if let error = error {
-                    print("Diplaying HD image failed: \(error)")
-                    return
-                }
-                
-                if let data = data {
-                    print("hd displayed")
-                    self.imageView.image = UIImage(data: data)
-                    self.activityIndicator.stopAnimating()
-                    self.configureScrollView()
-                }
+                self.imageView.image = image
+                print("hd image displayed \(image)")
             }
-        }.resume()
+        }
+        
+//        URLSession.shared.dataTask(with: hdurl) { (data, response, error) in
+//            DispatchQueue.main.async {
+//                if let error = error {
+//                    print("Diplaying HD image failed: \(error)")
+//                    return
+//                }
+//
+//                if let data = data {
+//                    print("hd displayed")
+//                    self.imageView.image = UIImage(data: data)
+//                    print("hd displayed \(UIImage(data: data)!)")
+//                    self.activityIndicator.stopAnimating()
+//                    self.configureScrollView()
+//                }
+//            }
+//        }.resume()
     }
     
     func displayImage() {
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        DispatchQueue.global().async {
+            let network = NetworkController()
+            let image = network.displayImage(url: self.url)
+            
             DispatchQueue.main.async {
-                if let error = error {
-                    print("Displaying image failed: \(error)")
-                    return
-                }
-                
-                if let data = data {
-                    print("small displayed")
-                    self.imageView.image = UIImage(data: data)
-                    self.activityIndicator.stopAnimating()
-                    self.configureScrollView()
-                }
+                self.imageView.image = image
+                print("small-px image displayed \(image)")
+                self.activityIndicator.stopAnimating()
+                self.configureScrollView()
             }
-        }.resume()
+        }
+    
+//        URLSession.shared.dataTask(with: url) { (data, response, error) in
+//            DispatchQueue.main.async {
+//                if let error = error {
+//                    print("Displaying image failed: \(error)")
+//                    return
+//                }
+//
+//                if let data = data {
+//                    self.imageView.image = UIImage(data: data)
+//                    print("small displayed \(UIImage(data: data)!)")
+//                    self.activityIndicator.stopAnimating()
+//                    self.configureScrollView()
+//                }
+//            }
+//        }.resume()
     }
     
     func configureScrollView() {

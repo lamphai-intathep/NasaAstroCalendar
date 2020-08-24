@@ -7,7 +7,7 @@ import UIKit
 import SafariServices
 import AVKit
 
-class ImageViewController: UIViewController {
+class ImageViewController: UIViewController, NetworkControllerDelegate {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -19,6 +19,7 @@ class ImageViewController: UIViewController {
     var photoInfo: PhotoInfo!
     var image: UIImage!
     var isImageDownloadCompleted: Bool = false
+    var networkManager = NetworkController()
     
     var detailItem: NSDate? {
         didSet {
@@ -37,72 +38,61 @@ class ImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         videoButton.isHidden = true
+        networkManager.delegate = self
+        
         if let _ = selectedDate {
-            fetchData()
+            networkManager.performRequest(selectedDate: selectedDate!)
         }
     }
     
-    func fetchData() {
-        let dateUrlFormatter = DateFormatter()
-        dateUrlFormatter.dateFormat = "yyyy-MM-dd"
-        let dateStr = dateUrlFormatter.string(from: selectedDate!)
-        
-        let baseUrl = URL(string: "https://api.nasa.gov/planetary/apod")!
-        let query: [String: String] = [
-            "api_key": "8e0SOielQeixak1Zaygd4Gb8abJnuvrjpLXOeHIN",
-            "date": dateStr
-        ]
-        let url = baseUrl.withQueries(query)!
-        //print("url:  \(url)")
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            DispatchQueue.main.async {
-                if let error = error {
-                    print("Fetching data failed: \(error)")
-                    return
-                }
-                
-                if let data = data {
-                    do {
-                        let decoder = JSONDecoder()
-                        let responseObject = try decoder.decode(PhotoInfo.self, from: data)
-                        self.photoInfo = responseObject
-                        self.displayData()
-                    } catch {
-                        print("Fetching data failed: data is nil")
-                        return
-                    }
-                }
-            }
-        }.resume()
+    func fetchData(photoInfo: PhotoInfo) {
+        print("imageview: \(photoInfo)")
     }
     
-    func displayData() {
-        photoInfo.isVideo ? displayVideo() : displayImage()
-    }
+//    func fetchData() {
+//        DispatchQueue.global().async {
+//            let network = NetworkController()
+//            let response = network.performRequest(selectedDate: self.selectedDate!)
+//            self.photoInfo = response
+//
+//            // wrap ui update on main thread
+//            DispatchQueue.main.async {
+//                self.photoInfo.isVideo ? self.displayVideo() : self.displayImage()
+//            }
+//        }
+ //   }
     
     func displayVideo() {
-        print("displayvideo")
         activityIndicator.stopAnimating()
         videoButton.isHidden = false
-        
         titleLabel.text = photoInfo?.title
         descTextView.text = photoInfo?.explanation
     }
     
     func displayImage() {
-        loadImage() // call from networking controller: parameter: closure
+        loadImage()
         titleLabel.text = photoInfo?.title
         descTextView.text = photoInfo?.explanation
     }
     
     func loadImage() {
+//        DispatchQueue.global().async {
+//            let network = NetworkController()
+//            let image = network.displayImage(url: self.photoInfo.url)
+//
+//            DispatchQueue.main.async {
+//                self.imageView.image = image
+//                self.activityIndicator.stopAnimating()
+//                self.isImageDownloadCompleted = true
+//            }
+//        }
         URLSession.shared.dataTask(with: photoInfo.url) { (data, response, error) in
             DispatchQueue.main.async {
                 if let error = error {
                     print("Loading image failed: \(error)")
                     return
                 }
-                
+
                 if let data = data {
                     self.imageView.image = UIImage(data: data)
                     self.activityIndicator.stopAnimating()
@@ -137,15 +127,3 @@ class ImageViewController: UIViewController {
         present(vc, animated: true)
     }
 }
-
-extension URL {
-    func withQueries(_ queries: [String: String]) -> URL? {
-        var components = URLComponents(url: self,
-        resolvingAgainstBaseURL: true)
-        components?.queryItems = queries.map
-            { URLQueryItem(name: $0.0, value: $0.1) }
-        return components?.url
-    }
-}
-
-
