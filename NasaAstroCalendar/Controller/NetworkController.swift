@@ -11,27 +11,36 @@ import AVKit
 
 struct NetworkController {
     
-    func performRequest(selectedDate: Date, completion: @escaping (PhotoInfo) -> Void) {
+    func fetchData(selectedDate: Date, completion: @escaping (PhotoInfo) -> Void) {
         let url = prepareURL(selectedDate: selectedDate)
-        let session = URLSession(configuration: .default)
-        
-        let task = session.dataTask(with: url) { (data, response, error) in
-            DispatchQueue.main.sync {
+        performRequest(url: url, finished: { (data) in
+            if let photoInfo = self.parseJSON(photoData: data) {
+                completion(photoInfo)
+            }
+        })
+    }
+    
+    func loadImage(url: URL, completion: @escaping (UIImage) -> Void) {
+        performRequest(url: url, finished: { (data) in
+            if let image = UIImage(data: data) {
+                completion(image)
+            }
+        })
+    }
+    
+    func performRequest(url: URL, finished: @escaping (Data) -> Void) {
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            DispatchQueue.main.async {
                 if error != nil {
-                    print("Sending GET request failed: \(String(describing: error))")
+                    print("Loading image failed: \(String(describing: error))")
                     return
                 }
                 
                 if let data = data {
-                    if let photoInfo = self.parseJSON(photoData: data) {
-                        //print("network \(photoInfo)")
-                        completion(photoInfo)
-                    }
+                    finished(data)
                 }
             }
-
-        }
-        task.resume()
+        }.resume()
     }
     
     func parseJSON(photoData: Data) -> PhotoInfo? {
@@ -56,30 +65,13 @@ struct NetworkController {
             "date": dateStr
         ]
         
-        let url = baseUrl.withQueries2(query)!
+        let url = baseUrl.withQueries(query)!
         return url
-    }
-    
-    func loadImage(url: URL, completion: @escaping (UIImage) -> Void) {
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            DispatchQueue.main.async {
-                if error != nil {
-                    print("Loading image failed: \(String(describing: error))")
-                    return
-                }
-                
-                if let data = data {
-                    if let image = UIImage(data: data) {
-                        completion(image)
-                    }
-                }
-            }
-        }.resume()
     }
 }
 
 extension URL {
-    func withQueries2(_ queries: [String: String]) -> URL? {
+    func withQueries(_ queries: [String: String]) -> URL? {
         var components = URLComponents(url: self,
         resolvingAgainstBaseURL: true)
         components?.queryItems = queries.map

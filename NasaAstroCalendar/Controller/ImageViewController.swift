@@ -39,7 +39,7 @@ class ImageViewController: UIViewController {
         videoButton.isHidden = true
         
         if let _ = selectedDate {
-            networkManager.performRequest(selectedDate: selectedDate!, completion: { (photoInfo) in
+            networkManager.fetchData(selectedDate: selectedDate!, completion: { (photoInfo) in
                 DispatchQueue.main.async {
                    //print("closure \(photoInfo)")
                     self.photoInfo = photoInfo
