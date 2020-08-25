@@ -7,7 +7,7 @@ import UIKit
 import SafariServices
 import AVKit
 
-class ImageViewController: UIViewController, NetworkControllerDelegate {
+class ImageViewController: UIViewController {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -15,9 +15,8 @@ class ImageViewController: UIViewController, NetworkControllerDelegate {
     @IBOutlet weak var videoButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    var selectedDate: Date?
     var photoInfo: PhotoInfo!
-    var image: UIImage!
+    var selectedDate: Date?
     var isImageDownloadCompleted: Bool = false
     var networkManager = NetworkController()
     
@@ -38,68 +37,39 @@ class ImageViewController: UIViewController, NetworkControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         videoButton.isHidden = true
-        networkManager.delegate = self
         
         if let _ = selectedDate {
-            networkManager.performRequest(selectedDate: selectedDate!)
+            networkManager.performRequest(selectedDate: selectedDate!, completion: { (photoInfo) in
+                DispatchQueue.main.async {
+                   //print("closure \(photoInfo)")
+                    self.photoInfo = photoInfo
+                    photoInfo.isVideo
+                        ? self.displayVideo(photoInfo: photoInfo)
+                        : self.displayImage(photoInfo: photoInfo)
+                }
+            })
         }
     }
     
-    func fetchData(photoInfo: PhotoInfo) {
-        print("imageview: \(photoInfo)")
-    }
-    
-//    func fetchData() {
-//        DispatchQueue.global().async {
-//            let network = NetworkController()
-//            let response = network.performRequest(selectedDate: self.selectedDate!)
-//            self.photoInfo = response
-//
-//            // wrap ui update on main thread
-//            DispatchQueue.main.async {
-//                self.photoInfo.isVideo ? self.displayVideo() : self.displayImage()
-//            }
-//        }
- //   }
-    
-    func displayVideo() {
+    func displayVideo(photoInfo: PhotoInfo) {
         activityIndicator.stopAnimating()
         videoButton.isHidden = false
-        titleLabel.text = photoInfo?.title
-        descTextView.text = photoInfo?.explanation
+        titleLabel.text = photoInfo.title
+        descTextView.text = photoInfo.explanation
     }
     
-    func displayImage() {
-        loadImage()
-        titleLabel.text = photoInfo?.title
-        descTextView.text = photoInfo?.explanation
-    }
-    
-    func loadImage() {
-//        DispatchQueue.global().async {
-//            let network = NetworkController()
-//            let image = network.displayImage(url: self.photoInfo.url)
-//
-//            DispatchQueue.main.async {
-//                self.imageView.image = image
-//                self.activityIndicator.stopAnimating()
-//                self.isImageDownloadCompleted = true
-//            }
-//        }
-        URLSession.shared.dataTask(with: photoInfo.url) { (data, response, error) in
+    func displayImage(photoInfo: PhotoInfo) {
+        networkManager.loadImage(url: photoInfo.url, completion: { (image) in
+            //print("image \(image)")
             DispatchQueue.main.async {
-                if let error = error {
-                    print("Loading image failed: \(error)")
-                    return
-                }
-
-                if let data = data {
-                    self.imageView.image = UIImage(data: data)
-                    self.activityIndicator.stopAnimating()
-                    self.isImageDownloadCompleted = true
-                }
+                self.imageView.image = image
+                self.activityIndicator.stopAnimating()
+                self.isImageDownloadCompleted = true
             }
-        }.resume()
+        })
+        
+        titleLabel.text = photoInfo.title
+        descTextView.text = photoInfo.explanation
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

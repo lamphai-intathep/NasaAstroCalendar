@@ -9,15 +9,9 @@
 import UIKit
 import AVKit
 
-protocol NetworkControllerDelegate {
-    func fetchData(photoInfo: PhotoInfo)
-}
-
 struct NetworkController {
     
-    var delegate: NetworkControllerDelegate?
-    
-    func performRequest(selectedDate: Date) {
+    func performRequest(selectedDate: Date, completion: @escaping (PhotoInfo) -> Void) {
         let url = prepareURL(selectedDate: selectedDate)
         let session = URLSession(configuration: .default)
         
@@ -30,7 +24,8 @@ struct NetworkController {
                 
                 if let data = data {
                     if let photoInfo = self.parseJSON(photoData: data) {
-                        self.delegate?.fetchData(photoInfo: photoInfo)
+                        //print("network \(photoInfo)")
+                        completion(photoInfo)
                     }
                 }
             }
@@ -44,7 +39,6 @@ struct NetworkController {
             let decoder = JSONDecoder()
             let photoInfo = try decoder.decode(PhotoInfo.self, from: photoData)
             return photoInfo
-            //self.photo = decodedPhoto
         } catch {
             print("Parsing JSON failed: \(error)")
             return nil
@@ -66,24 +60,21 @@ struct NetworkController {
         return url
     }
     
-    func displayImage(url: URL) -> UIImage {
-        let semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
-        var image = UIImage()
+    func loadImage(url: URL, completion: @escaping (UIImage) -> Void) {
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             DispatchQueue.main.async {
-                if let error = error {
-                    print("Diplaying image failed: \(error)")
+                if error != nil {
+                    print("Loading image failed: \(String(describing: error))")
                     return
                 }
                 
                 if let data = data {
-                    image = UIImage(data: data)!
-                    semaphore.signal()
+                    if let image = UIImage(data: data) {
+                        completion(image)
+                    }
                 }
             }
         }.resume()
-        semaphore.wait()
-        return image
     }
 }
 

@@ -11,97 +11,38 @@ class ImageDetailViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
+    var networkManager = NetworkController()
     var hdurl: URL!
     var url: URL!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureScrollView()
+        zoomImage()
         
         if let _ = hdurl, let _ = url {
-            displayImage()
-            displayHdImage()
+            displayImage(url: url, msg: "Small image: ")
+            displayImage(url: hdurl, msg: "HD image: ")
         }
     }
     
-    func displayHdImage() {
-        DispatchQueue.global().async {
-            let network = NetworkController()
-            let image = network.displayImage(url: self.hdurl)
-            
+    func displayImage(url: URL, msg: String) {
+        networkManager.loadImage(url: url, completion: { (image) in
             DispatchQueue.main.async {
                 self.imageView.image = image
-                print("hd image displayed \(image)")
-            }
-        }
-        
-//        URLSession.shared.dataTask(with: hdurl) { (data, response, error) in
-//            DispatchQueue.main.async {
-//                if let error = error {
-//                    print("Diplaying HD image failed: \(error)")
-//                    return
-//                }
-//
-//                if let data = data {
-//                    print("hd displayed")
-//                    self.imageView.image = UIImage(data: data)
-//                    print("hd displayed \(UIImage(data: data)!)")
-//                    self.activityIndicator.stopAnimating()
-//                    self.configureScrollView()
-//                }
-//            }
-//        }.resume()
-    }
-    
-    func displayImage() {
-        DispatchQueue.global().async {
-            let network = NetworkController()
-            let image = network.displayImage(url: self.url)
-            
-            DispatchQueue.main.async {
-                self.imageView.image = image
-                print("small-px image displayed \(image)")
+                print("\(msg) \(image)")
                 self.activityIndicator.stopAnimating()
-                self.configureScrollView()
             }
-        }
-    
-//        URLSession.shared.dataTask(with: url) { (data, response, error) in
-//            DispatchQueue.main.async {
-//                if let error = error {
-//                    print("Displaying image failed: \(error)")
-//                    return
-//                }
-//
-//                if let data = data {
-//                    self.imageView.image = UIImage(data: data)
-//                    print("small displayed \(UIImage(data: data)!)")
-//                    self.activityIndicator.stopAnimating()
-//                    self.configureScrollView()
-//                }
-//            }
-//        }.resume()
+        })
     }
     
-    func configureScrollView() {
-        scrollView.contentSize = imageView.bounds.size
+    func zoomImage() {
+        scrollView.delegate = self
+        scrollView.maximumZoomScale = 10
+        scrollView.minimumZoomScale = 1
         scrollView.addSubview(imageView)
-        view.addSubview(scrollView)
     }
     
-    func recenterImage() {
-        
-    }
-}
-
-extension ImageViewController: UIScrollViewDelegate
-{
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
-    
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        //recenterImage()
-    }
 }
-
