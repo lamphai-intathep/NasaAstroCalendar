@@ -14,22 +14,6 @@ struct PhotoInfo: Codable {
     var url: URL
     var hdurl: URL?
     
-    /*
-    enum CodingKeys: String, CodingKey {
-        case title
-        case explanation
-        case url
-    }
-
-    init(from decoder: Decoder) throws {
-
-        let valueContainer = try decoder.container(keyedBy: CodingKeys.self)
-        self.title = try valueContainer.decode(String.self, forKey: CodingKeys.title)
-        self.explanation = try valueContainer.decode(String.self, forKey: CodingKeys.explanation)
-        self.url = try valueContainer.decode(String.self, forKey: CodingKeys.url)
-    }
- */
-    
     init(title:String, explanation:String, url:URL, hdurl:URL) {
         self.title = title
         self.explanation = explanation

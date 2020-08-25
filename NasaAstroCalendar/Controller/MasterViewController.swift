@@ -10,25 +10,15 @@ class MasterViewController: UIViewController {
     @IBOutlet weak var selectedDateLabel: UILabel!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var indicatorImageView: UIImageView!
-
-    // var selectedDate: String!
-    // state variables should be avoided, so how to pass selectedDate to Prepare func
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let yesterday = Calendar.current.date(byAdding: .day, value: -2, to: Date())
         datePicker.maximumDate = yesterday
-        displayDate()
+        updateDateLabel()
     }
     
-// move this func as it is called once as part of url
-//    func fetchDateSelected() {
-//        let dateUrlFormatter = DateFormatter()
-//        dateUrlFormatter.dateFormat = "yyyy-MM-dd"
-//        selectedDate = dateUrlFormatter.string(from: datePicker.date)
-//    }
-    
-    func displayDate() { // update date label
+    func updateDateLabel() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
         let strDate = dateFormatter.string(from: datePicker.date)
@@ -43,7 +33,7 @@ class MasterViewController: UIViewController {
     }
     
     @IBAction func datePickerChanged(_ sender: Any) {
-        displayDate()
+        updateDateLabel()
     }
     
     @IBAction func ClickButton(_ sender: UIButton) {
